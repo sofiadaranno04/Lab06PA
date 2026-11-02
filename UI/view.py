@@ -13,6 +13,7 @@ class View:
         self.page = page
         self.page.title = "Lab06"
         self.page.horizontal_alignment = "center"
+        self.page.scroll = ft.ScrollMode.AUTO
         self.page.theme_mode = ft.ThemeMode.DARK
 
         # Alert
@@ -28,6 +29,7 @@ class View:
         # Non obbligatorio mettere già qui tutti gli elementi UI
 
     def show_alert(self, messaggio):
+        """mostra un popup di avvios /errore all'utente"""
         self.alert.show_alert(messaggio)
 
     def set_controller(self, controller):
@@ -35,37 +37,50 @@ class View:
         self.controller = controller
 
     def update(self):
+        """aggiorna ala schermata di Flet"""
         self.page.update()
 
     def load_interface(self):
         """ Crea e aggiunge Elementi di UI alla pagina e la aggiorna. """
+        #intestazione con il nome del deposito
         self.txt_titolo = ft.Text(value=self.controller.get_nome(), size=38, weight=ft.FontWeight.BOLD)
+        #etichetta del resposnabile
         self.txt_responsabile = ft.Text(
             value=f"Responsabile: {self.controller.get_responsabile()}",
             size=16,
             weight=ft.FontWeight.BOLD
         )
 
-        # TextField per responsabile
+        # TextField per responsabile, campo di testo per modificae il noe del responabile
         self.input_responsabile = ft.TextField(value=self.controller.get_responsabile(), label="Responsabile")
 
-        # ListView per mostrare la lista di strumenti aggiornata
-        self.lista_strumenti = ft.ListView(expand=True, spacing=5, padding=10, auto_scroll=True)
+        # ListView dove il Controller inserirà gli strumenti caricati dal Model, elenco comleto degli stumenti.(Sezione 3)
+        self.lista_strumenti = ft.ListView(
+            height=180, spacing=5, padding=10, auto_scroll=False
+        )
 
-        # TextField per ricerca strumento per tipo
+        # TextField per ricerca strumento per tipo, campo di testo per inserire il tipo di strumento da cercare. (Sezione 4)
         self.input_tipo_strumento = ft.TextField(label="Tipo")
 
-        # ListView per mostrare il risultato della ricerca strumenti per tipo
-        self.lista_strumenti_ricerca = ft.ListView(expand=True, spacing=5, padding=10, auto_scroll=True)
+        # Lista separata per mostrare i risultati della ricerca per tipo.
+        self.lista_strumenti_ricerca = ft.ListView(
+            height=180, spacing=5, padding=10, auto_scroll=False
+        )
 
         # --- PULSANTI e TOGGLE associati a EVENTI ---
+        # Gli handler del Controller vengono chiamati quando l'utente clicca.
         self.toggle_cambia_tema = ft.Switch(label="Tema scuro", value=True, on_change=self.cambia_tema)
         pulsante_conferma_responsabile = ft.Button("Conferma", on_click=self.controller.conferma_responsabile)
 
-        # Altri Pulsanti da implementare (es. "Mostra" e "Cerca")
-        # TODO
+        pulsante_mostra = ft.Button(
+            "Mostra", on_click=self.controller.mostra_strumenti
+        )
+        pulsante_cerca = ft.Button(
+            "Cerca", on_click=self.controller.cerca_strumenti_per_tipo
+        )
 
         # --- LAYOUT ---
+        # Gli elementi sono aggiunti dall'alto verso il basso come richiesto.
         self.page.add(
             self.toggle_cambia_tema,
 
@@ -81,11 +96,20 @@ class View:
                    alignment=ft.MainAxisAlignment.CENTER),
             ft.Divider(),
 
-            # Sezione 3
-            # TODO
+            # Sezione 3: lista degli strumenti
+            ft.Text("Strumenti", size=20, weight=ft.FontWeight.BOLD),
+            pulsante_mostra,
+            self.lista_strumenti,
+            ft.Divider(),
 
-            # Sezione 4
-            # TODO
+            # Sezione 4: ricerca strumento per tipo
+            ft.Text("Cerca Strumento per Tipo", size=20, weight=ft.FontWeight.BOLD),
+            ft.Row(
+                spacing=20,
+                controls=[self.input_tipo_strumento, pulsante_cerca],
+                alignment=ft.MainAxisAlignment.CENTER,
+            ),
+            self.lista_strumenti_ricerca,
         )
 
     def cambia_tema(self, e):
