@@ -51,10 +51,10 @@ class View:
             weight=ft.FontWeight.BOLD
         )
 
-        # TextField per responsabile, campo di testo per modificae il noe del responabile
+        # TextField per responsabile, campo di testo per modificae il nome del responabile
         self.input_responsabile = ft.TextField(value=self.controller.get_responsabile(), label="Responsabile")
 
-        # ListView dove il Controller inserirà gli strumenti caricati dal Model, elenco comleto degli stumenti.(Sezione 3)
+        # ListView dove il Controller inserirà gli strumenti caricati dal Model, elenco completo degli stumenti aggiornata.(Sezione 3)
         self.lista_strumenti = ft.ListView(
             height=180, spacing=5, padding=10, auto_scroll=False
         )
@@ -72,12 +72,8 @@ class View:
         self.toggle_cambia_tema = ft.Switch(label="Tema scuro", value=True, on_change=self.cambia_tema)
         pulsante_conferma_responsabile = ft.Button("Conferma", on_click=self.controller.conferma_responsabile)
 
-        pulsante_mostra = ft.Button(
-            "Mostra", on_click=self.controller.mostra_strumenti
-        )
-        pulsante_cerca = ft.Button(
-            "Cerca", on_click=self.controller.cerca_strumenti_per_tipo
-        )
+        pulsante_mostra_strumenti = ft.Button("Mostra", on_click=self.controller.mostra_strumenti)
+        pulsante_cerca_per_tipo = ft.Button("Cerca", on_click=self.controller.cerca_strumenti_per_tipo)
 
         # --- LAYOUT ---
         # Gli elementi sono aggiunti dall'alto verso il basso come richiesto.
@@ -97,20 +93,21 @@ class View:
             ft.Divider(),
 
             # Sezione 3: lista degli strumenti
-            ft.Text("Strumenti", size=20, weight=ft.FontWeight.BOLD),
-            pulsante_mostra,
-            self.lista_strumenti,
+            ft.Text(spacing=200,
+                    controls=[self.input_responsabile,pulsante_mostra_strumenti],
+                    alignment=ft.MainAxisAlignment.START),
+            self.lista_strumenti,#appendo la ListaView
             ft.Divider(),
 
             # Sezione 4: ricerca strumento per tipo
-            ft.Text("Cerca Strumento per Tipo", size=20, weight=ft.FontWeight.BOLD),
-            ft.Row(
-                spacing=20,
-                controls=[self.input_tipo_strumento, pulsante_cerca],
-                alignment=ft.MainAxisAlignment.CENTER,
-            ),
-            self.lista_strumenti_ricerca,
+            ft.Text("Cerca Strumento per Tipo", size=20),
+            ft.Row(spacing=10,
+                   controls=[self.input_tipo_strumento, pulsante_cerca_per_tipo],
+                   alignment=ft.MainAxisAlignment.START),
+            self.lista_strumenti_ricerca
+
         )
+
 
     def cambia_tema(self, e):
         self.page.theme_mode = ft.ThemeMode.DARK if self.toggle_cambia_tema.value else ft.ThemeMode.LIGHT

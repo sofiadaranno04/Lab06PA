@@ -23,14 +23,10 @@ class Controller:
         self._model.responsabile = responsabile
 
     def conferma_responsabile(self, e):
-        # Il controller legge il campo della View e rimuove spazi superflui.
-        responsabile = (self._view.input_responsabile.value or "").strip()
-        if not responsabile:
-            self._view.show_alert("Inserisci il nome del responsabile.")
-            return
+        # Il controller legge il campo della View e rimuove spazi superflui
 
         # Aggiorna il dato nel Model e poi il testo mostrato nella View.
-        self._model.responsabile = responsabile
+        self._model.responsabile = self._view.input_responsabile.value
         self._view.txt_responsabile.value = f"Responsabile: {self._model.responsabile}"
         self._view.update()
 

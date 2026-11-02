@@ -1,3 +1,6 @@
+import mysql
+from mysql.connector import errorcode
+
 from database.DB_connect import get_connection
 from model.strumento import Strumento
 from model.prestito import Prestito
